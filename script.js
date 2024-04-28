@@ -1,62 +1,115 @@
-let container = document.getElementById("product-cont")
 
 
+let container = document.getElementById("product-cont");
+let data; 
 
- async function getData(){
- try {
-    let res = await fetch(`https://fakestoreapi.com/products`)
-    let data =await res.json()
-    
-    ShowData(data)
-     
+async function getData() {
+    try {
+        let res = await fetch(`https://fakestoreapi.com/products`);
+        data = await res.json();
+        ShowData(data);
+    } catch (error) {
+        console.log("Error", error);
+    }
+}
 
+function ShowData(arr) {
+    container.innerHTML = "";
+    arr.forEach(function(ele) {
+        let card = document.createElement("div");
+        let image = document.createElement("img");
+        image.src = ele.image;
 
- } catch (error) {
-    console.log("Eroor" , error)
- }
+        let title = document.createElement("h3");
+        title.innerHTML = ele.title;
+
+        let price = document.createElement("h4");
+        price.innerHTML = `$${ele.price}`; 
+
+        card.append(image, title, price);
+        container.append(card);
+    });
 }
 
 
 
-function ShowData(arr){
-    container.innerHTML =""
-    arr.forEach(function(ele,i){
+let searchinput = document.getElementById("search-input");
 
-        let card = document.createElement("div")
-        let image = document.createElement("img")    
-        image.src = ele.image
+let searchbtn = document.getElementById("search-btn");
 
-        let title = document.createElement("h3")
-        title.innerHTML = ele.title
-        
-        let price = document.createElement("h4")
-        price.innerHTML = ele.price
-        card.append(image,title,price)
-        container.append(card)
+
+
+function searchfun() {
+   
+
+let searchvalue = searchinput.value.trim().toLowerCase()
+
+ let narr =   data.filter(function(ele){
+       return  ele.title.toLowerCase().includes(searchvalue)
 
     })
+    
+if(narr.length === 0){ 
+    container.innerHTML = "hi"
+}
+else{
+    ShowData(narr)
+}
+
+}
+
+searchbtn.addEventListener("click", searchfun);
+
+
+
+function sortData(){
+    
+
+    let value = sort.value
+    let narr;
+    
+   
+        if(value === "asc" ){
+            narr = data.sort(function(a,b){
+                return a.price - b.price
+            })
+        }
+
+    else if(value === "desc"){
+        narr = data.sort(function(a,b){
+            return b.price - a.price
+        })
+    }
+    
+
+    ShowData(narr)
+}
+   let sort = document.getElementById("sortbyprice")
+
+   sort.addEventListener("change" , sortData)
+
+
+
+   
+
+function sortbycategory(){
+
+    let value = sortbytype.value
+   
+
+
+
+
 }
 
 
 
-let searchinput = document.getElementById("search-input")
-
-let searchbtn = document.getElementById("search-btn")
-
-
-// function searchfun(data){
-// container.innerHTML =""
-//    let narr = data.filter(function(ele){
-//      return ele.title === searchinput.value
-//    })
-
-//    ShowData(narr)
-// }
-
-// searchbtn.addEventListener("click" , function(){
-//     searchfun()
-// })
 
 
 
-getData()
+   let sortbytype = document.getElementById("sortbytype")
+  
+   sortbytype.addEventListener("change" , sortbycategory)
+
+getData();
+
